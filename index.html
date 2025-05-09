@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Cross-Site Scripting (XSS)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .smooth-scroll {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 smooth-scroll">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#" class="text-2xl font-bold text-blue-600">Web Security Hub</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="#home" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md">Home</a>
+                    <a href="#what-is-xss" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md">What is XSS?</a>
+                    <a href="#types" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md">Types of XSS</a>
+                    <a href="#prevention" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md">Prevention</a>
+                    <a href="labs.html" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md">Labs</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="menu-toggle" class="text-gray-600 hover:text-blue-600 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-md">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="block text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md">Home</a>
+                <a href="#what-is-xss" class="block text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md">What is XSS?</a>
+                <a href="#types" class="block text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md">Types of XSS</a>
+                <a href="#prevention" class="block text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md">Prevention</a>
+                <a href="labs.html" class="block text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md">Labs</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Hero Section -->
+        <section id="home" class="bg-white rounded-lg shadow-md p-8 mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Cross-Site Scripting (XSS)</h1>
+            <p class="text-lg text-gray-600 mb-6">
+                Learn about Cross-Site Scripting (XSS), a common web security vulnerability that allows attackers to inject malicious scripts into web pages viewed by other users.
+            </p>
+            <a href="#what-is-xss" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
+                Explore More
+            </a>
+        </section>
+
+        <!-- What is XSS? -->
+        <section id="what-is-xss" class="mb-12">
+            <h2 class="text-3xl font-semibold text-gray-900 mb-6">What is Cross-Site Scripting (XSS)?</h2>
+            <p class="text-gray-600 mb-4">
+                Cross-Site Scripting (XSS) is a type of web security vulnerability that allows attackers to inject malicious scripts into content served to users by a trusted website. When the script is executed in a victim's browser, it runs with the same permissions as the site itself — enabling actions like stealing cookies, impersonating users, or modifying the content displayed to the victim.
+            </p>
+            <p class="text-gray-600 mb-4">
+                XSS vulnerabilities arise when user input is improperly validated or encoded, allowing untrusted data to be interpreted as executable code.
+            </p>
+            <h3 class="text-xl font-medium text-gray-900 mb-2">What Can XSS Be Used For?</h3>
+            <p class="text-gray-600">
+                An attacker exploiting an XSS vulnerability can:
+            </p>
+            <ul class="list-disc list-inside text-gray-600 mt-2">
+                <li>Steal session cookies, local storage data, or other sensitive information.</li>
+                <li>Impersonate the victim by hijacking their session.</li>
+                <li>Redirect users to phishing or malicious websites.</li>
+                <li>Log keystrokes or install browser-based malware.</li>
+                <li>Modify web content or deface websites.</li>
+                <li>Perform actions on behalf of users, such as changing account details or posting spam.</li>
+            </ul>
+        </section>
+
+        <!-- Types of XSS -->
+        <section id="types" class="mb-12">
+            <h2 class="text-3xl font-semibold text-gray-900 mb-6">Types of XSS Attacks</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-medium text-gray-900 mb-2">Reflected XSS</h3>
+<p class="text-gray-600">
+    Reflected XSS happens when malicious input is immediately returned by the server in the response without proper sanitization.
+</p>
+<p class="text-gray-600 mt-2">
+    <strong>Example:</strong> A search feature that reflects user input like this:
+</p>
+<pre class="bg-gray-100 p-2 rounded text-sm mt-2 overflow-x-auto"><code>&lt;p&gt;You searched for: &lt;script&gt;alert('XSS')&lt;/script&gt;&lt;/p&gt;</code></pre>
+<p class="text-gray-600 mt-2">
+    If this content is not properly escaped, it can lead to script execution when a user visits a crafted URL.
+</p>
+
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-medium text-gray-900 mb-2">Stored XSS</h3>
+<p class="text-gray-600">
+    Stored XSS occurs when a malicious script is permanently stored on the server (e.g., in a database) and served to users who view the affected page.
+</p>
+<p class="text-gray-600 mt-2">
+    <strong>Example:</strong> An attacker leaves a comment like:
+</p>
+<pre class="bg-gray-100 p-2 rounded text-sm mt-2 overflow-x-auto"><code>&lt;script&gt;alert('You got hacked!')&lt;/script&gt;</code></pre>
+<p class="text-gray-600 mt-2">
+    When another user visits the page with that comment, the script executes in their browser.
+</p>
+
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-medium text-gray-900 mb-2">DOM-Based XSS</h3>
+<p class="text-gray-600">
+    DOM-Based XSS occurs entirely on the client side when JavaScript reads data from the browser (e.g., URL, cookies) and inserts it into the DOM without proper sanitization or encoding.
+</p>
+<p class="text-gray-600 mt-2">
+    <strong>Example:</strong> Suppose your script includes:
+</p>
+<pre class="bg-gray-100 p-2 rounded text-sm mt-2 overflow-x-auto"><code>document.getElementById("output").innerHTML = location.hash;</code></pre>
+<p class="text-gray-600 mt-2">
+    If an attacker sends a link like:
+</p>
+<pre class="bg-gray-100 p-2 rounded text-sm mt-2 overflow-x-auto"><code>http://example.com/#&lt;img src=x onerror=alert('XSS')&gt;</code></pre>
+<p class="text-gray-600 mt-2">
+    The malicious HTML will be inserted into the page when the browser renders the hash, triggering the script.
+</p>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Prevention -->
+        <section id="prevention" class="mb-12">
+            <h2 class="text-3xl font-semibold text-gray-900 mb-6">Preventing XSS Attacks</h2>
+            <p class="text-gray-600 mb-4">
+                To mitigate XSS, developers should follow defense-in-depth using multiple layers of security:
+            </p>
+            <ul class="list-disc list-inside text-gray-600 mb-4">
+                <li><strong>Input Validation:</strong> Accept only expected input formats (e.g., numbers, emails). Reject or sanitize any unexpected input early in the processing flow. Use allow-lists (positive validation) over block-lists (negative validation).</li>
+                <li><strong>Output Encoding:</strong> Always encode user data before outputting it into HTML, JavaScript, CSS, or URLs. Use context-sensitive encoding (e.g., HTML entities for HTML, JavaScript string escaping for scripts). Example: <code>&lt;script&gt;</code> becomes <code>&lt;script&gt;</code> in HTML.</li>
+                <li><strong>Content Security Policy (CSP):</strong> Use CSP headers to restrict the sources from which scripts can be executed. Example: <code>Content-Security-Policy: default-src 'self'; script-src 'self';</code></li>
+                <li><strong>Use Security-Conscious Frameworks:</strong> Frameworks like React, Angular, and Vue.js automatically escape user inputs by default, making it harder to introduce XSS. Avoid bypassing built-in security features (e.g., <code>dangerouslySetInnerHTML</code> in React).</li>
+                <li><strong>Set HTTP-Only and Secure Cookies:</strong> Mark session cookies as <code>HttpOnly</code> so they cannot be accessed via JavaScript. Use <code>Secure</code> to ensure cookies are sent over HTTPS only.</li>
+                <li><strong>Regular Security Testing:</strong> Perform automated and manual testing using tools like OWASP ZAP, Burp Suite, or Nuclei. Include code reviews and security audits as part of the development lifecycle.</li>
+            </ul>
+        </section>
+
+        <!-- XSS Labs -->
+        <section id="labs" class="mb-12">
+            <h2 class="text-3xl font-semibold text-gray-900 mb-6">XSS Labs</h2>
+            <p class="text-gray-600 mb-6">
+                Ready to test your XSS skills? Dive into our interactive labs designed to challenge you with real-world vulnerabilities. Start with the Easy lab and work your way up to Difficult!
+            </p>
+            <a href="labs.html" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
+                Access the Labs
+            </a>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-gray-400">
+                © 2025 Web Security Hub. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu -->
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

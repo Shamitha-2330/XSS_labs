@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialSphere XSS Labs - Web Security Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-blue-600">SocialSphere Security Labs</h1>
+            <nav class="hidden md:flex space-x-4">
+                <a href="index.html" class="text-gray-600 hover:text-blue-600">Home</a>
+                <a href="labs.html" class="text-gray-600 hover:text-blue-600">Labs</a>
+            </nav>
+            <button id="mobile-menu-toggle" class="md:hidden focus:outline-none">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white px-4 py-2">
+            <a href="index.html" class="block py-2 text-gray-600 hover:text-blue-600">Home</a>
+            <a href="labs.html" class="block py-2 text-gray-600 hover:text-blue-600">Labs</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-3xl font-semibold text-gray-900 mb-4">SocialSphere XSS Labs</h2>
+            <p class="text-gray-600 mb-6">
+                Welcome to SocialSphere, a social media platform with hidden vulnerabilities! Practice your XSS skills by exploiting these features, designed to simulate real-world scenarios. Each lab increases in difficulty.
+            </p>
+
+            <div class="space-y-6">
+                <!-- Easy XSS Lab -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md flex justify-between items-center">
+                    <div>
+                        <h3 class="text-xl font-medium text-gray-900">Easy XSS Lab</h3>
+                        <p class="text-gray-600">Reflected XSS in SocialSphere's search feature.</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <span id="easy-status" class="px-3 py-1 rounded-full text-sm font-semibold bg-gray-200 text-gray-800">Not Solved</span>
+                        <a href="easy-desc.html" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Start Lab</a>
+                    </div>
+                </div>
+
+                <!-- Medium XSS Lab -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md flex justify-between items-center">
+                    <div>
+                        <h3 class="text-xl font-medium text-gray-900">Medium XSS Lab</h3>
+                        <p class="text-gray-600">DOM-based XSS in SocialSphere's search results.</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <span id="medium-status" class="px-3 py-1 rounded-full text-sm font-semibold bg-gray-200 text-gray-800">Not Solved</span>
+                        <a href="medium-desc.html" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Start Lab</a>
+                    </div>
+                </div>
+
+                <!-- Difficult XSS Lab -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md flex justify-between items-center">
+                    <div>
+                        <h3 class="text-xl font-medium text-gray-900">Difficult XSS Lab</h3>
+                        <p class="text-gray-600">Stored XSS in SocialSphere's profile bio.</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <span id="difficult-status" class="px-3 py-1 rounded-full text-sm font-semibold bg-gray-200 text-gray-800">Not Solved</span>
+                        <a href="difficult-desc.html" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Start Lab</a>
+                    </div>
+                </div>
+
+                <!-- Easy XSS Lab 2 -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md flex justify-between items-center">
+                    <div>
+                        <h3 class="text-xl font-medium text-gray-900">Easy XSS Lab 2</h3>
+                        <p class="text-gray-600">Reflected XSS in SocialSphere's comment section.</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <span id="easy2-status" class="px-3 py-1 rounded-full text-sm font-semibold bg-gray-200 text-gray-800">Not Solved</span>
+                        <a href="easy2-desc.html" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Start Lab</a>
+                    </div>
+                </div>
+
+                <!-- Medium XSS Lab 2 -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md flex justify-between items-center">
+                    <div>
+                        <h3 class="text-xl font-medium text-gray-900">Medium XSS Lab 2</h3>
+                        <p class="text-gray-600">DOM-based XSS in SocialSphere's feedback submission.</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <span id="medium2-status" class="px-3 py-1 rounded-full text-sm font-semibold bg-gray-200 text-gray-800">Not Solved</span>
+                        <a href="medium2-desc.html" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Start Lab</a>
+                    </div>
+                </div>
+
+                <!-- Very Difficult XSS Lab -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md flex justify-between items-center">
+                    <div>
+                        <h3 class="text-xl font-medium text-gray-900">Difficult XSS Lab 2</h3>
+                        <p class="text-gray-600">Multi-step stored XSS in SocialSphere's group chat.</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <span id="very-difficult-status" class="px-3 py-1 rounded-full text-sm font-semibold bg-gray-200 text-gray-800">Not Solved</span>
+                        <a href="very-difficult-desc.html" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Start Lab</a>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="resetProgress()" class="mt-6 bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700 transition">Reset Progress</button>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-gray-400">© 2025 SocialSphere Security Labs. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-toggle').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Function to update lab statuses
+        function updateStatuses() {
+            const statuses = {
+                'easy': 'easy-solved',
+                'medium': 'medium-solved',
+                'difficult': 'difficult-solved',
+                'easy2': 'easy2-solved',
+                'medium2': 'medium2-solved',
+                'very-difficult': 'very-difficult-solved'
+            };
+
+            for (let [id, key] of Object.entries(statuses)) {
+                console.log(`Checking ${key}: ${localStorage.getItem(key)}`);
+                if (localStorage.getItem(key) === 'true') {
+                    const statusElement = document.getElementById(`${id}-status`);
+                    if (statusElement) {
+                        statusElement.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-green-200 text-green-800';
+                        statusElement.textContent = 'Solved';
+                    }
+                }
+            }
+        }
+
+        // Update statuses on page load
+        window.onload = function() {
+            console.log('Page loaded, updating statuses...');
+            updateStatuses();
+        };
+
+        // Update statuses on visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                console.log('Tab became visible, updating statuses...');
+                updateStatuses();
+            }
+        });
+
+        function resetProgress() {
+            localStorage.removeItem('easy-solved');
+            localStorage.removeItem('medium-solved');
+            localStorage.removeItem('difficult-solved');
+            localStorage.removeItem('bio');
+            localStorage.removeItem('easy2-solved');
+            localStorage.removeItem('medium2-solved');
+            localStorage.removeItem('very-difficult-solved');
+            localStorage.removeItem('chatMessages');
+            document.getElementById('easy-status').className = 'px-3 py-1 rounded-full text-sm font-semibold bg-gray-200 text-gray-800';
+            document.getElementById('easy-status').textContent = 'Not Solved';
+            document.getElementById('medium-status').className = 'px-3 py-1 rounded-full text-sm font-semibold bg-gray-200 text-gray-800';
+            document.getElementById('medium-status').textContent = 'Not Solved';
+            document.getElementById('difficult-status').className = 'px-3 py-1 rounded-full text-sm font-semibold bg-gray-200 text-gray-800';
+            document.getElementById('difficult-status').textContent = 'Not Solved';
+            document.getElementById('easy2-status').className = 'px-3 py-1 rounded-full text-sm font-semibold bg-gray-200 text-gray-800';
+            document.getElementById('easy2-status').textContent = 'Not Solved';
+            document.getElementById('medium2-status').className = 'px-3 py-1 rounded-full text-sm font-semibold bg-gray-200 text-gray-800';
+            document.getElementById('medium2-status').textContent = 'Not Solved';
+            document.getElementById('very-difficult-status').className = 'px-3 py-1 rounded-full text-sm font-semibold bg-gray-200 text-gray-800';
+            document.getElementById('very-difficult-status').textContent = 'Not Solved';
+            alert('Progress reset! All labs are marked as unsolved.');
+            updateStatuses();
+        }
+    </script>
+</body>
+</html>

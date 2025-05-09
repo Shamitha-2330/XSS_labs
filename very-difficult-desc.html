@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Difficult XSS Lab 2 - SocialSphere Security Labs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-blue-600">SocialSphere Security Labs</h1>
+            <nav class="hidden md:flex space-x-4">
+                <a href="index.html" class="text-gray-600 hover:text-blue-600">Home</a>
+                <a href="labs.html" class="text-gray-600 hover:text-blue-600">Labs</a>
+            </nav>
+            <button id="mobile-menu-toggle" class="md:hidden focus:outline-none">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white px-4 py-2">
+            <a href="index.html" class="block py-2 text-gray-600 hover:text-blue-600">Home</a>
+            <a href="labs.html" class="block py-2 text-gray-600 hover:text-blue-600">Labs</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Lab Solved Banner -->
+        <div id="solved-banner" class="hidden bg-green-100 p-4 rounded-lg shadow-md mb-12 flex justify-between items-center fade-in">
+            <p class="text-green-800 font-semibold">Lab Solved! 🎉 Great job exploiting the multi-step stored XSS vulnerability.</p>
+            <a href="labs.html" class="text-blue-600 hover:underline">Try Another Lab</a>
+        </div>
+
+        <!-- Lab Description -->
+        <section class="bg-white p-6 rounded-lg shadow-md mb-12">
+            <h2 class="text-3xl font-semibold text-gray-900 mb-4">Difficult XSS Lab 2: Multi-Step Stored XSS in Group Chat</h2>
+            <p class="text-gray-600 mb-4">
+                In this lab, you'll exploit a complex stored Cross-Site Scripting (XSS) vulnerability in SocialSphere's group chat feature. The chat allows users to post messages, which are stored and displayed to all group members. The application applies some input sanitization, but it's flawed, requiring filter evasion, DOM clobbering, and event-based execution to exploit.
+            </p>
+            <p class="text-gray-600 mb-4">
+                Your task is to craft a message that bypasses the filters, manipulates the DOM, and executes a malicious script when another user interacts with the chat. This is a multi-step challenge that requires advanced XSS techniques. Once you solve the lab, click below to reveal the solution details.
+            </p>
+            <a href="very-difficult-vuln.html" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">Solve Lab</a>
+        </section>
+
+        <!-- Solution Section (Hidden by Default, Expandable) -->
+        <section class="bg-gray-50 p-6 rounded-lg shadow-md">
+            <button id="toggle-solution" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mb-4">Show Solution</button>
+            <div id="solution-section" class="hidden">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-4">Solution</h3>
+                <p class="text-gray-600 mb-4">
+                    The vulnerability involves multiple layers in the group chat feature. Messages are stored in localStorage and displayed using <code>innerHTML</code>. The application attempts to sanitize input by removing <code>script</code> tags and <code>on*</code> event attributes, but it fails to account for other vectors like DOM clobbering and event delegation.
+                </p>
+                <p class="text-gray-600 mb-4">
+                    To exploit this, you need to:
+                </p>
+                <ul class="list-decimal list-inside text-gray-600 mb-4">
+                    <li>Bypass the filter by avoiding <code>script</code> and <code>on*</code> attributes.</li>
+                    <li>Use DOM clobbering to manipulate the DOM structure.</li>
+                    <li>Trigger the payload via an event (e.g., clicking a message).</li>
+                </ul>
+                <p class="text-gray-600 mb-4">
+                    A working payload example is:
+                </p>
+                <pre class="bg-gray-200 p-4 rounded-md text-gray-800 mb-4">
+                    &lt;a id="chatMessages" name="chatMessages" href="javascript:alert('XSS')"&gt;
+                      &lt;div id="chatMessages"&gt;Click to reveal secret message!&lt;/div&gt;
+                    &lt;/a&gt;
+                    </pre>
+                    
+                    
+                <p class="text-gray-600 mb-4">
+                    Here's how it works:
+                </p>
+                <ul class="list-disc list-inside text-gray-600 mb-4">
+                    <li>The filter removes <code>script</code> and <code>on*</code> attributes, but allows <code>a</code> tags with <code>href</code>.</li>
+                    <li>The payload uses DOM clobbering: the <code>a</code> tag with <code>id="chatMessages"</code> and <code>name="chatMessages"</code> overrides the <code>chatMessages</code> element reference in the DOM.</li>
+                    <li>The <code>href="javascript:alert('XSS')"</code> executes when the link is clicked.</li>
+                    <li>The event listener on <code>chatMessages</code> (intended for the container) is bypassed because the DOM reference is clobbered, and the click directly triggers the <code>href</code>.</li>
+                </ul>
+                <p class="text-gray-600 mb-4">
+                    In this lab, the exploit is detected by checking for "javascript:" in the DOM, marking the lab as solved.
+                </p>
+                <h4 class="text-xl font-semibold text-gray-900 mb-2">How to Find the Vulnerability</h4>
+                <p class="text-gray-600 mb-4">
+                    You can identify this vulnerability using a tool like <strong>Burp Suite</strong>. Steps include:
+                </p>
+                <ul class="list-disc list-inside text-gray-600 mb-4">
+                    <li>Configure your browser to use Burp Suite as a proxy.</li>
+                    <li>Navigate to the group chat page and submit a test message (e.g., "test message").</li>
+                    <li>Since this is client-side, inspect the DOM and localStorage (via Developer Tools) to see how messages are stored and rendered.</li>
+                    <li>Test payloads in the message input, starting with simple ones like <code>&lt;script&gt;alert('test')&lt;script&gt;</code> to understand the filter.</li>
+                    <li>Once you identify the filter (e.g., removes <code>script</code> and <code>on*</code>), try advanced payloads like the DOM clobbering example above using Burp's Repeater to refine the attack.</li>
+                    <li>Confirm the exploit by observing script execution or DOM manipulation when the message is clicked.</li>
+                </ul>
+                <h4 class="text-xl font-semibold text-gray-900 mb-2">Fix for the Vulnerability</h4>
+                <p class="text-gray-600 mb-4">
+                    To fix this vulnerability:
+                </p>
+                <ul class="list-disc list-inside text-gray-600 mb-4">
+                    <li>Implement robust input sanitization by removing or escaping all HTML tags, not just <code>script</code> and <code>on*</code> attributes.</li>
+                    <li>Use <code>textContent</code> instead of <code>innerHTML</code> when rendering messages to prevent script execution.</li>
+                    <li>Avoid DOM clobbering by using unique, non-overridable IDs and ensuring event listeners target specific elements safely.</li>
+                    <li>Implement a Content Security Policy (CSP) with a strict <code>script-src</code> directive to block inline scripts and unsafe <code>javascript:</code> URLs.</li>
+                </ul>
+                <h4 class="text-xl font-semibold text-gray-900 mb-2">OWASP Top 10 Mapping</h4>
+                <p class="text-gray-600">
+                    This vulnerability falls under <strong>OWASP Top 10 A03:2021 - Injection</strong>, specifically Cross-Site Scripting (XSS), as it allows untrusted input to be injected into the page.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-gray-400">© 2025 SocialSphere Security Labs. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-toggle').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Check if the lab is solved
+        window.onload = function() {
+            const isSolved = localStorage.getItem('very-difficult-solved') === 'true';
+            if (isSolved) {
+                document.getElementById('solved-banner').classList.remove('hidden');
+            }
+        };
+
+        // Toggle solution visibility
+        document.getElementById('toggle-solution').addEventListener('click', () => {
+            const solutionSection = document.getElementById('solution-section');
+            const button = document.getElementById('toggle-solution');
+            solutionSection.classList.toggle('hidden');
+            button.textContent = solutionSection.classList.contains('hidden') ? 'Show Solution' : 'Hide Solution';
+        });
+    </script>
+</body>
+</html>

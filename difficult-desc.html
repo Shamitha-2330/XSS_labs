@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Difficult XSS Lab - SocialSphere Security Labs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-blue-600">SocialSphere Security Labs</h1>
+            <nav class="hidden md:flex space-x-4">
+                <a href="index.html" class="text-gray-600 hover:text-blue-600">Home</a>
+                <a href="labs.html" class="text-gray-600 hover:text-blue-600">Labs</a>
+            </nav>
+            <button id="mobile-menu-toggle" class="md:hidden focus:outline-none">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white px-4 py-2">
+            <a href="index.html" class="block py-2 text-gray-600 hover:text-blue-600">Home</a>
+            <a href="labs.html" class="block py-2 text-gray-600 hover:text-blue-600">Labs</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Lab Solved Banner -->
+        <div id="solved-banner" class="hidden bg-green-100 p-4 rounded-lg shadow-md mb-12 flex justify-between items-center fade-in">
+            <p class="text-green-800 font-semibold">Lab Solved! 🎉 Great job exploiting the stored XSS vulnerability.</p>
+            <a href="labs.html" class="text-blue-600 hover:underline">Try Another Lab</a>
+        </div>
+
+        <!-- Lab Description -->
+        <section class="bg-white p-6 rounded-lg shadow-md mb-12">
+            <h2 class="text-3xl font-semibold text-gray-900 mb-4">Difficult XSS Lab: Stored XSS in Profile Bio</h2>
+            <p class="text-gray-600 mb-4">
+                In this lab, you'll exploit a stored Cross-Site Scripting (XSS) vulnerability in SocialSphere's profile bio feature. The bio input is saved to local storage and displayed on the page without sanitization, allowing persistent script execution.
+            </p>
+            <p class="text-gray-600 mb-4">
+                Your task is to craft a bio that injects a malicious script, which will execute whenever the page is loaded. Once you solve the lab, click below to reveal the solution details.
+            </p>
+            <a href="difficult-vuln.html" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">Solve Lab</a>
+        </section>
+
+        <!-- Solution Section (Hidden by Default, Expandable) -->
+        <section class="bg-gray-50 p-6 rounded-lg shadow-md">
+            <button id="toggle-solution" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mb-4">Show Solution</button>
+            <div id="solution-section" class="hidden">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-4">Solution</h3>
+                <p class="text-gray-600 mb-4">
+                    The vulnerability lies in how the profile bio is handled. The bio input is saved to local storage and then injected into the DOM using <code>innerHTML</code> without sanitization, making it vulnerable to stored XSS.
+                </p>
+                <p class="text-gray-600 mb-4">
+                    To exploit this, enter a malicious payload in the bio field. For example:
+                </p>
+                <pre class="bg-gray-200 p-4 rounded-md text-gray-800 mb-4">
+                    &lt;img src="x" onerror="alert('XSS')"&gt;    
+                </pre>
+                <p class="text-gray-600 mb-4">
+                    When the page loads or the bio is updated, the script in the <code>onerror</code> attribute executes, triggering an <code>alert('XSS')</code>. In this lab, the alert is suppressed, and the exploit is detected by checking for the presence of an <code>img[onerror]</code> element, marking the lab as solved.
+                </p>
+                <h4 class="text-xl font-semibold text-gray-900 mb-2">How to Find the Vulnerability</h4>
+                <p class="text-gray-600 mb-4">
+                    You can identify this vulnerability using a tool like <strong>Burp Suite</strong>. Steps include:
+                </p>
+                <ul class="list-disc list-inside text-gray-600 mb-4">
+                    <li>Configure your browser to use Burp Suite as a proxy.</li>
+                    <li>Navigate to the profile page and submit a test bio (e.g., "test bio").</li>
+                    <li>In Burp Suite's Proxy tab, intercept the HTTP request (if the bio were sent to a server) or inspect the page behavior using Burp's Repeater tool.</li>
+                    <li>Test by submitting a payload like <code>&lt;img src="x" onerror="alert('test')"&gt;</code> in the bio field.</li>
+                    <li>Reload the page and observe if the script executes. Check the browser's local storage (via Developer Tools) to confirm the payload is stored and reflected unescaped in the DOM.</li>
+                </ul>
+                <h4 class="text-xl font-semibold text-gray-900 mb-2">Fix for the Vulnerability</h4>
+                <p class="text-gray-600 mb-4">
+                    To fix this vulnerability:
+                </p>
+                <ul class="list-disc list-inside text-gray-600 mb-4">
+                    <li>Sanitize user input before storing it in local storage by removing or escaping HTML and script-related characters.</li>
+                    <li>Use <code>textContent</code> instead of <code>innerHTML</code> when displaying the bio to prevent script execution.</li>
+                    <li>Implement a Content Security Policy (CSP) to block unauthorized scripts.</li>
+                </ul>
+                <h4 class="text-xl font-semibold text-gray-900 mb-2">OWASP Top 10 Mapping</h4>
+                <p class="text-gray-600">
+                    This vulnerability falls under <strong>OWASP Top 10 A03:2021 - Injection</strong>, specifically Cross-Site Scripting (XSS), as it allows untrusted input to be injected into the page.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-gray-400">© 2025 SocialSphere Security Labs. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-toggle').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Check if the lab is solved
+        window.onload = function() {
+            const isSolved = localStorage.getItem('difficult-solved') === 'true';
+            if (isSolved) {
+                document.getElementById('solved-banner').classList.remove('hidden');
+            }
+        };
+
+        // Toggle solution visibility
+        document.getElementById('toggle-solution').addEventListener('click', () => {
+            const solutionSection = document.getElementById('solution-section');
+            const button = document.getElementById('toggle-solution');
+            solutionSection.classList.toggle('hidden');
+            button.textContent = solutionSection.classList.contains('hidden') ? 'Show Solution' : 'Hide Solution';
+        });
+    </script>
+</body>
+</html>

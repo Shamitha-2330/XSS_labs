@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Chat - SocialSphere</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .hero-bg {
+            background-image: url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <!-- Success Modal -->
+    <div id="success-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-md text-center max-w-md mx-auto">
+            <h2 class="text-2xl font-bold text-green-600 mb-4">Congratulations!</h2>
+            <p class="text-gray-600 mb-6">You've solved the Very Difficult XSS Lab by exploiting a multi-step stored XSS vulnerability in SocialSphere's group chat!</p>
+            <div class="flex justify-center space-x-4">
+                <a href="very-difficult-desc.html" class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700">Back to Lab</a>
+                <a href="labs.html" class="bg-gray-600 text-white px-6 py-3 rounded-md hover:bg-gray-700">Try Another Lab</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-bold">SocialSphere</h1>
+            <nav class="hidden md:flex space-x-4">
+                <a href="index.html" class="hover:text-gray-200">Home</a>
+                <a href="very-difficult-desc.html" class="hover:text-gray-200">Back to Lab</a>
+            </nav>
+            <button id="mobile-menu-toggle" class="md:hidden focus:outline-none">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-blue-600 text-white px-4 py-2">
+            <a href="index.html" class="block py-2 hover:text-gray-200">Home</a>
+            <a href="very-difficult-desc.html" class="block py-2 hover:text-gray-200">Back to Lab</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-bg py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-5xl font-bold text-white mb-4">Group Chat</h2>
+            <p class="text-xl text-gray-200 mb-6">Chat with your friends in SocialSphere groups!</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Chat Section -->
+        <section class="bg-white p-6 rounded-lg shadow-md mb-12">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">Group Chat: Friends Hangout</h2>
+            <div id="chatMessages" class="p-4 bg-gray-50 rounded-md h-96 overflow-y-auto mb-4 space-y-4"></div>
+            <div class="flex space-x-4">
+                <input id="messageInput" type="text" class="flex-1 p-3 border rounded-md" placeholder="Type your message...">
+                <button onclick="sendMessage()" class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">Send</button>
+            </div>
+        </section>
+
+        <!-- Group Members -->
+        <section class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">Group Members</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-gray-50 p-4 rounded-md flex items-center space-x-4">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="User Avatar" class="w-12 h-12 rounded-full">
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900">Jane Doe</h3>
+                        <p class="text-gray-600">@janedoe</p>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-md flex items-center space-x-4">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="User Avatar" class="w-12 h-12 rounded-full">
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900">John Smith</h3>
+                        <p class="text-gray-600">@johnsmith</p>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-md flex items-center space-x-4">
+                    <img src="https://images.unsplash.com/photo-1517841902196-6c0e5b01c8e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="User Avatar" class="w-12 h-12 rounded-full">
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900">Alex Brown</h3>
+                        <p class="text-gray-600">@alexbrown</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-gray-400">© 2025 SocialSphere. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-toggle').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Sanitize input (flawed implementation)
+        function sanitizeInput(input) {
+            // Attempt to remove script tags and on* attributes
+            let sanitized = input.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+            sanitized = sanitized.replace(/\bon\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]*)/gi, '');
+            return sanitized;
+        }
+
+        // Load messages from localStorage
+        function loadMessages() {
+            const messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML = '';
+            messages.forEach((msg, index) => {
+                const messageElement = document.createElement('div');
+                messageElement.className = 'bg-gray-100 p-3 rounded-md flex items-start space-x-3 message-' + index;
+                messageElement.innerHTML = `
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="User Avatar" class="w-8 h-8 rounded-full">
+                    <div>
+                        <p class="text-gray-800 font-medium">Jane Doe</p>
+                        <p class="text-gray-600">${msg}</p>
+                    </div>
+                `;
+                chatMessages.appendChild(messageElement);
+            });
+
+            // Check for exploit
+            const hasExploit = Array.from(chatMessages.getElementsByTagName('a')).some(link => link.href.includes('javascript:'));
+            if (hasExploit) {
+                localStorage.setItem('very-difficult-solved', 'true');
+                document.getElementById('success-modal').classList.remove('hidden');
+            }
+        }
+
+        // Send message
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            let message = messageInput.value.trim();
+            if (!message) return;
+
+            // Sanitize message (flawed)
+            message = sanitizeInput(message);
+
+            // Store message
+            const messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+            messages.push(message);
+            localStorage.setItem('chatMessages', JSON.stringify(messages));
+
+            // Clear input and reload messages
+            messageInput.value = '';
+            loadMessages();
+        }
+
+        // Add event listener for clicking messages (intended for features like reply, but exploitable)
+        document.getElementById('chatMessages').addEventListener('click', (e) => {
+            const messageDiv = e.target.closest('div[class*="message-"]');
+            if (messageDiv) {
+                // Feature to highlight message (can be exploited via DOM clobbering)
+                messageDiv.classList.toggle('bg-blue-100');
+            }
+        });
+
+        // Load messages on page load
+        window.onload = loadMessages;
+
+        // Reset messages for testing (optional)
+        localStorage.setItem('chatMessages', JSON.stringify([]));
+    </script>
+</body>
+</html>
