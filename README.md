@@ -33,7 +33,7 @@ To run this project locally, you will need:
 Open your terminal in VS Code and run:
 
 ```bash
-git clone https://github.com/Shamitha-2330/SocialSphere-XSS-Labs.git
+git clone https://github.com/Shamitha-2330/XSS_Labs.git
 cd SocialSphere-XSS-Labs
 ```
 
