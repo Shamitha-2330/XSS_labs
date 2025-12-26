@@ -8,7 +8,7 @@ This project is an interactive way to learn about Cross-Site Scripting (XSS) vul
 
 You can try the labs online by visiting the live demo:
 
-**[SocialSphere XSS Labs on Netlify](https://681daefb576dd64136636a37--venerable-figolla-744090.netlify.app/)**
+**[SocialSphere XSS Labs on Netlify](https://681ebf1e1f1aae000805b044--venerable-figolla-744090.netlify.app/)**
 
 ## Features
 
